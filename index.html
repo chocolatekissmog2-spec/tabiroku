@@ -530,7 +530,9 @@ $('#rst').onclick=()=>{
 
 // ---------- クラウド同期 ----------
 const CKEY='tabiroku.cloud';
+const DEFAULT_ENDPOINT='https://script.google.com/macros/s/AKfycbzJFkZVS7VhQIMILgKmF2aQ5AqRu19CX8HJq8iJKySjwicfIlCMDOlyEqbfx0q__61nmg/exec';
 let CLOUD={url:'',key:''};try{Object.assign(CLOUD,JSON.parse(localStorage.getItem(CKEY)||'{}'))}catch(e){}
+if(!CLOUD.url)CLOUD.url=DEFAULT_ENDPOINT;
 let cPushTimer=null;
 function cloudOn(){return !!(CLOUD.url&&CLOUD.key)}
 function setCst(t){const el=$('#cst');if(el)el.textContent=t}
