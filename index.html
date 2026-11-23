@@ -190,6 +190,9 @@ const SPOTS=[
 ['hk-otaru-sushi','北海道','f','小樽の寿司'],
 ['hk-yukimatsuri','北海道','e','さっぽろ雪まつり'],
 ['hk-ryuhyo','北海道','e','流氷砕氷船（網走）'],
+['hk-kushiro-canoe','北海道','e','釧路川カヌー（釧路湿原）'],
+['hk-teshio-canoe','北海道','e','天塩川カヌー'],
+['hk-shikotsu-kayak','北海道','e','支笏湖カヤック'],
 // ===== 青森県 =====
 ['ao-warasse','青森県','s','ねぶたの家 ワ・ラッセ'],
 ['ao-art-museum','青森県','s','青森県立美術館'],
@@ -210,6 +213,9 @@ const SPOTS=[
 ['ao-senbeijiru','青森県','f','せんべい汁'],
 ['ao-nokkedon','青森県','f','のっけ丼'],
 ['ao-nebuta','青森県','e','青森ねぶた祭'],
+['ao-towada-kayak','青森県','e','十和田湖カヌー'],
+['ao-ichigoni','青森県','f','いちご煮'],
+['ao-barayaki','青森県','f','十和田バラ焼き'],
 // ===== 岩手県 =====
 ['iw-wanko','岩手県','f','わんこそば（盛岡）'],
 ['iw-koiwai','岩手県','s','小岩井農場'],
@@ -229,6 +235,8 @@ const SPOTS=[
 ['iw-jajamen','岩手県','f','じゃじゃ麺'],
 ['iw-maesawa-gyu','岩手県','f','前沢牛'],
 ['iw-sansa','岩手県','e','盛岡さんさ踊り'],
+['iw-hittsumi','岩手県','f','ひっつみ'],
+['iw-nanbu-senbei','岩手県','f','南部せんべい'],
 // ===== 宮城県 =====
 ['mg-matsushima','宮城県','v','松島'],
 ['mg-uminomori','宮城県','s','仙台うみの杜水族館'],
@@ -249,6 +257,8 @@ const SPOTS=[
 ['mg-gyutan','宮城県','f','牛タン'],
 ['mg-zunda','宮城県','f','ずんだ餅'],
 ['mg-tanabata','宮城県','e','仙台七夕まつり'],
+['mg-sasakamaboko','宮城県','f','笹かまぼこ'],
+['mg-harakomeshi','宮城県','f','はらこ飯'],
 // ===== 秋田県 =====
 ['ak-inaniwa','秋田県','f','稲庭うどん'],
 ['ak-omagari','秋田県','e','大曲の花火'],
@@ -270,6 +280,8 @@ const SPOTS=[
 ['ak-kiritanpo','秋田県','f','きりたんぽ鍋'],
 ['ak-hinai','秋田県','f','比内地鶏'],
 ['ak-kanto','秋田県','e','秋田竿燈まつり'],
+['ak-yokote-yakisoba','秋田県','f','横手やきそば'],
+['ak-shottsuru','秋田県','f','しょっつる鍋'],
 // ===== 山形県 =====
 ['yg-mogami','山形県','v','最上川'],
 ['yg-yonezawa','山形県','f','米沢牛'],
@@ -291,6 +303,8 @@ const SPOTS=[
 ['yg-soba','山形県','f','山形そば'],
 ['yg-sakuranbo','山形県','f','さくらんぼ'],
 ['yg-hanagasa','山形県','e','山形花笠まつり'],
+['yg-hiyashi-ramen','山形県','f','冷やしラーメン'],
+['yg-dashi','山形県','f','山形のだし'],
 // ===== 福島県 =====
 ['fs-kitakata','福島県','f','喜多方ラーメン'],
 ['fs-miharu','福島県','v','三春滝桜'],
@@ -312,6 +326,10 @@ const SPOTS=[
 ['fs-enban-gyoza','福島県','f','円盤餃子'],
 ['fs-sauce-katsudon','福島県','f','ソースカツ丼'],
 ['fs-noma-oi','福島県','e','相馬野馬追'],
+['fs-hinohara-kayak','福島県','e','桧原湖カヤック'],
+['fs-abukuma-canoe','福島県','e','阿武隈川カヌー'],
+['fs-shirakawa-ramen','福島県','f','白河ラーメン'],
+['fs-namie-yakisoba','福島県','f','なみえ焼きそば'],
 // ===== 茨城県 =====
 ['ib-kairaku','茨城県','s','偕楽園'],
 ['ib-fukuroda','茨城県','v','袋田の滝'],
@@ -333,6 +351,8 @@ const SPOTS=[
 ['ib-anko-nabe','茨城県','f','あんこう鍋'],
 ['ib-mito-natto','茨城県','f','水戸納豆'],
 ['ib-ishioka-matsuri','茨城県','e','石岡のおまつり'],
+['ib-rokkakudo-waffle','茨城県','f','干し芋'],
+['ib-hitachi-aki-soba','茨城県','f','常陸秋そば'],
 // ===== 栃木県 =====
 ['tc-kegon','栃木県','v','華厳の滝'],
 ['tc-ashikaga-flower-park','栃木県','s','あしかがフラワーパーク'],
@@ -354,6 +374,9 @@ const SPOTS=[
 ['tc-utsunomiya-gyoza','栃木県','f','宇都宮餃子'],
 ['tc-sano-ramen','栃木県','f','佐野ラーメン'],
 ['tc-mashiko-pottery-fair','栃木県','e','益子陶器市'],
+['tc-naka-canoe','栃木県','e','那珂川カヌー'],
+['tc-yuba','栃木県','f','日光ゆば'],
+['tc-lemon-milk','栃木県','f','レモン牛乳'],
 // ===== 群馬県 =====
 ['gm-kusatsu','群馬県','o','草津温泉'],
 ['gm-mizusawa','群馬県','f','水沢うどん'],
@@ -375,6 +398,8 @@ const SPOTS=[
 ['gm-yaki-manju','群馬県','f','焼きまんじゅう'],
 ['gm-okkirikomi','群馬県','f','おっきりこみ'],
 ['gm-minakami-rafting','群馬県','e','みなかみラフティング'],
+['gm-shimonita-negi','群馬県','f','下仁田ねぎ'],
+['gm-mizusawa-udon-extra','群馬県','f','下仁田こんにゃく'],
 // ===== 埼玉県 =====
 ['st-railway-museum','埼玉県','s','鉄道博物館'],
 ['st-koedo-kawagoe','埼玉県','s','小江戸川越'],
@@ -396,6 +421,9 @@ const SPOTS=[
 ['st-jumangoku-manju','埼玉県','f','十万石まんじゅう'],
 ['st-chichibu-yomatsuri','埼玉県','e','秩父夜祭'],
 ['st-kawagoe-matsuri','埼玉県','e','川越まつり'],
+['st-nagatoro-canoe','埼玉県','e','長瀞カヌー'],
+['st-zely-fry','埼玉県','f','ゼリーフライ'],
+['st-kawagoe-imo','埼玉県','f','川越いもスイーツ'],
 // ===== 千葉県 =====
 ['ch-tokyo-disney-resort','千葉県','s','東京ディズニーリゾート'],
 ['ch-kamogawa-seaworld','千葉県','s','鴨川シーワールド'],
@@ -417,6 +445,8 @@ const SPOTS=[
 ['ch-namero','千葉県','f','なめろう'],
 ['ch-sawara-no-taisai','千葉県','e','佐原の大祭'],
 ['ch-narita-gion-matsuri','千葉県','e','成田祇園祭'],
+['ch-ordea-hamburg','千葉県','f','さんが焼き'],
+['ch-choshi-densetsu','千葉県','f','銚子のいわし料理'],
 // ===== 東京都 =====
 ['tk-kanda','東京都','e','神田祭'],
 ['tk-sanno','東京都','e','山王祭'],
@@ -438,6 +468,9 @@ const SPOTS=[
 ['tk-fukagawa-meshi','東京都','f','深川めし'],
 ['tk-chanko-nabe','東京都','f','ちゃんこ鍋'],
 ['tk-sanja-matsuri','東京都','e','三社祭'],
+['tk-tama-rafting','東京都','e','多摩川ラフティング（奥多摩）'],
+['tk-edo-mae-sushi','東京都','f','江戸前寿司'],
+['tk-ningyo-yaki','東京都','f','人形焼'],
 // ===== 神奈川県 =====
 ['kn-kamakura','神奈川県','h','鎌倉大仏（高徳院）'],
 ['kn-yokohama-minatomirai','神奈川県','s','横浜みなとみらい'],
@@ -459,6 +492,8 @@ const SPOTS=[
 ['kn-yokohama-iekei-ramen','神奈川県','f','横浜家系ラーメン'],
 ['kn-misaki-maguro','神奈川県','f','三崎まぐろ'],
 ['kn-hiratsuka-tanabata','神奈川県','e','湘南ひらつか七夕まつり'],
+['kn-shumai','神奈川県','f','崎陽軒のシウマイ'],
+['kn-shirasu-don','神奈川県','f','しらす丼'],
 // ===== 新潟県 =====
 ['nt-kiyotsu','新潟県','v','清津峡'],
 ['nt-nagaoka','新潟県','e','長岡まつり大花火大会'],
@@ -480,6 +515,9 @@ const SPOTS=[
 ['nt-tarekatsu','新潟県','f','タレカツ丼'],
 ['nt-taraibune','新潟県','e','たらい舟'],
 ['nt-katakaihanabi','新潟県','e','片貝まつり大花火'],
+['nt-okutadami-kayak','新潟県','e','奥只見湖カヤック'],
+['nt-seabura-ramen','新潟県','f','燕三条背脂ラーメン'],
+['nt-buscenter-curry','新潟県','f','バスセンターのカレー'],
 // ===== 富山県 =====
 ['tym-kurobe','富山県','v','黒部峡谷'],
 ['tym-shomyo','富山県','v','称名滝'],
@@ -501,6 +539,8 @@ const SPOTS=[
 ['tym-shiroebi','富山県','f','白えび'],
 ['tym-toyamablack','富山県','f','富山ブラックラーメン'],
 ['tym-owara','富山県','e','おわら風の盆'],
+['tym-masuzushi','富山県','f','ます寿司'],
+['tym-himi-kanburi','富山県','f','氷見寒ブリ'],
 // ===== 石川県 =====
 ['is-kenroku','石川県','s','兼六園'],
 ['is-hakusan','石川県','v','白山'],
@@ -522,6 +562,8 @@ const SPOTS=[
 ['is-omicho','石川県','f','近江町市場'],
 ['is-nodoguro','石川県','f','のどぐろ'],
 ['is-hyakumangoku','石川県','e','金沢百万石まつり'],
+['is-kanazawa-curry','石川県','f','金沢カレー'],
+['is-jibuni','石川県','f','治部煮'],
 // ===== 福井県 =====
 ['fu-kyoryu','福井県','s','恐竜博物館'],
 ['fu-akarenga','福井県','s','敦賀赤レンガ倉庫'],
@@ -543,6 +585,9 @@ const SPOTS=[
 ['fu-oroshisoba','福井県','f','おろしそば'],
 ['fu-omizuokuri','福井県','e','お水送り'],
 ['fu-mikunimatsuri','福井県','e','三国祭'],
+['fu-kuzuryu-canoe','福井県','e','九頭竜川カヌー'],
+['fu-yakisaba-zushi','福井県','f','焼き鯖寿司'],
+['fu-boruga-rice','福井県','f','ボルガライス'],
 // ===== 山梨県 =====
 ['ym-jindai','山梨県','v','山高神代桜'],
 ['ym-fujikyu','山梨県','s','富士急ハイランド'],
@@ -564,6 +609,9 @@ const SPOTS=[
 ['ym-koshuwine','山梨県','f','甲州ワイン'],
 ['ym-shingenko','山梨県','e','信玄公祭り'],
 ['ym-himatsuri','山梨県','e','吉田の火祭り'],
+['ym-shojiko-kayak','山梨県','e','精進湖カヤック'],
+['ym-yoshida-udon','山梨県','f','吉田のうどん'],
+['ym-awabi-nigai','山梨県','f','あわびの煮貝'],
 // ===== 長野県 =====
 ['nn-togakushi','長野県','f','戸隠そば'],
 ['nn-jigokudani','長野県','s','地獄谷野猿公苑'],
@@ -585,6 +633,9 @@ const SPOTS=[
 ['nn-oyaki','長野県','f','おやき'],
 ['nn-basashi','長野県','f','馬刺し'],
 ['nn-onbashira','長野県','e','御柱祭'],
+['nn-aokiko-kayak','長野県','e','青木湖カヤック'],
+['nn-sanzokuyaki','長野県','f','山賊焼き'],
+['nn-romen','長野県','f','ローメン'],
 // ===== 岐阜県 =====
 ['gf-gero','岐阜県','o','下呂温泉'],
 ['gf-usuzumi','岐阜県','v','根尾谷の淡墨桜'],
@@ -606,6 +657,9 @@ const SPOTS=[
 ['gf-keichan','岐阜県','f','けいちゃん'],
 ['gf-takayamamatsuri','岐阜県','e','高山祭'],
 ['gf-ukai','岐阜県','e','長良川鵜飼'],
+['gf-maze-canoe','岐阜県','e','馬瀬川カヌー'],
+['gf-takayama-ramen','岐阜県','f','高山ラーメン'],
+['gf-goheimochi','岐阜県','f','五平餅'],
 // ===== 静岡県 =====
 ['sz-fujigawa','静岡県','v','富士川'],
 ['sz-fuji','静岡県','v','富士山'],
@@ -627,6 +681,9 @@ const SPOTS=[
 ['sz-gyoza','静岡県','f','浜松餃子'],
 ['sz-yakisoba','静岡県','f','富士宮やきそば'],
 ['sz-hamamatsumatsuri','静岡県','e','浜松まつり'],
+['sz-keta-canoe','静岡県','e','気田川カヌー'],
+['sz-sakuraebi','静岡県','f','桜えび'],
+['sz-hamanako-unagi','静岡県','f','浜名湖うなぎ'],
 // ===== 愛知県 =====
 ['ai-nagoya','愛知県','h','名古屋城'],
 ['ai-toyokawa','愛知県','h','豊川稲荷'],
@@ -648,6 +705,8 @@ const SPOTS=[
 ['ai-tebasaki','愛知県','f','手羽先'],
 ['ai-misokatsu','愛知県','f','味噌カツ'],
 ['ai-nagoyamatsuri','愛知県','e','名古屋まつり'],
+['ai-miso-nikomi','愛知県','f','味噌煮込みうどん'],
+['ai-taiwan-ramen','愛知県','f','台湾ラーメン'],
 // ===== 三重県 =====
 ['me-osugi','三重県','v','大杉谷'],
 ['me-matsusaka','三重県','f','松阪牛'],
@@ -669,6 +728,9 @@ const SPOTS=[
 ['me-tekone-zushi','三重県','f','てこね寿司'],
 ['me-akafuku','三重県','f','赤福'],
 ['me-ishidori-matsuri','三重県','e','石取祭'],
+['me-miya-canoe','三重県','e','宮川カヌー'],
+['me-iseebi','三重県','f','伊勢海老'],
+['me-tsugyoza','三重県','f','津餃子'],
 // ===== 滋賀県 =====
 ['sh-omi','滋賀県','f','近江牛'],
 ['sh-biwa','滋賀県','v','琵琶湖'],
@@ -690,6 +752,9 @@ const SPOTS=[
 ['sh-omi-champon','滋賀県','f','近江ちゃんぽん'],
 ['sh-funa-zushi','滋賀県','f','鮒寿司'],
 ['sh-nagahama-hikiyama','滋賀県','e','長浜曳山祭'],
+['sh-biwa-kayak','滋賀県','e','琵琶湖カヤック'],
+['sh-akakonnyaku','滋賀県','f','赤こんにゃく'],
+['sh-salad-pan','滋賀県','f','サラダパン'],
 // ===== 京都府 =====
 ['ky-kiyomizu','京都府','h','清水寺'],
 ['ky-fushimi','京都府','h','伏見稲荷大社'],
@@ -716,6 +781,9 @@ const SPOTS=[
 ['ky-jidai','京都府','e','時代祭'],
 ['ky-okuribi','京都府','e','五山送り火'],
 ['ky-maiko','京都府','e','舞妓・着物体験'],
+['ky-hozu-rafting','京都府','e','保津川ラフティング'],
+['ky-yatsuhashi','京都府','f','八ツ橋'],
+['ky-yuba','京都府','f','湯葉'],
 // ===== 大阪府 =====
 ['os-castle','大阪府','h','大阪城'],
 ['os-tenjin','大阪府','e','天神祭'],
@@ -737,6 +805,8 @@ const SPOTS=[
 ['os-okonomiyaki','大阪府','f','お好み焼き'],
 ['os-kushikatsu','大阪府','f','串カツ'],
 ['os-kishiwada-danjiri','大阪府','e','岸和田だんじり祭'],
+['os-doteyaki','大阪府','f','どて焼き'],
+['os-ikayaki','大阪府','f','いか焼き'],
 // ===== 兵庫県 =====
 ['hy-himeji','兵庫県','h','姫路城'],
 ['hy-rokko','兵庫県','v','六甲山（夜景）'],
@@ -758,6 +828,9 @@ const SPOTS=[
 ['hy-akashiyaki','兵庫県','f','明石焼き'],
 ['hy-izushi-soba','兵庫県','f','出石そば'],
 ['hy-nada-kenka','兵庫県','e','灘のけんか祭り'],
+['hy-maruyama-canoe','兵庫県','e','円山川カヌー'],
+['hy-bokkake','兵庫県','f','ぼっかけ'],
+['hy-himeji-oden','兵庫県','f','姫路おでん'],
 // ===== 奈良県 =====
 ['nr-todaiji','奈良県','h','東大寺（大仏）'],
 ['nr-asuka','奈良県','h','飛鳥大仏（飛鳥寺）'],
@@ -779,6 +852,9 @@ const SPOTS=[
 ['nr-narazuke','奈良県','f','奈良漬け'],
 ['nr-wakakusa-yamayaki','奈良県','e','若草山焼き'],
 ['nr-omizutori','奈良県','e','お水取り'],
+['nr-kitayama-rafting','奈良県','e','北山川ラフティング'],
+['nr-asukanabe','奈良県','f','飛鳥鍋'],
+['nr-chagayu','奈良県','f','茶粥'],
 // ===== 和歌山県 =====
 ['wk-shirahama','和歌山県','o','白浜温泉'],
 ['wk-nachi','和歌山県','v','那智の滝'],
@@ -801,6 +877,9 @@ const SPOTS=[
 ['wk-mehari-zushi','和歌山県','f','めはり寿司'],
 ['wk-goma-dofu','和歌山県','f','ごま豆腐'],
 ['wk-otou-matsuri','和歌山県','e','御燈祭り'],
+['wk-koza-canoe','和歌山県','e','古座川カヌー'],
+['wk-kue','和歌山県','f','クエ料理'],
+['wk-shirasudon','和歌山県','f','しらす丼'],
 // ===== 鳥取県 =====
 ['tt-mizuki-shigeru-road','鳥取県','s','水木しげるロード'],
 ['tt-suna-no-bijutsukan','鳥取県','s','砂の美術館'],
@@ -822,6 +901,8 @@ const SPOTS=[
 ['tt-mosaebi','鳥取県','f','もさえび'],
 ['tt-gyukotsu-ramen','鳥取県','f','牛骨ラーメン'],
 ['tt-shanshan-matsuri','鳥取県','e','鳥取しゃんしゃん祭'],
+['tt-nijisseiki-nashi','鳥取県','f','二十世紀梨'],
+['tt-tofu-chikuwa','鳥取県','f','とうふちくわ'],
 // ===== 島根県 =====
 ['sm-izumo-soba','島根県','f','出雲そば'],
 ['sm-yunokawa','島根県','o','湯の川温泉（島根）'],
@@ -843,6 +924,9 @@ const SPOTS=[
 ['sm-izumo-zenzai','島根県','f','出雲ぜんざい'],
 ['sm-horikawa-yuransen','島根県','e','松江堀川遊覧船'],
 ['sm-iwami-kagura','島根県','e','石見神楽'],
+['sm-gono-canoe','島根県','e','江の川カヌー'],
+['sm-akaten','島根県','f','赤天'],
+['sm-shimane-wagyu','島根県','f','島根和牛'],
 // ===== 岡山県 =====
 ['ok-koraku','岡山県','s','後楽園'],
 ['ok-mogami-inari','岡山県','h','最上稲荷'],
@@ -864,6 +948,8 @@ const SPOTS=[
 ['ok-mamakari','岡山県','f','ままかり'],
 ['ok-bizenyaki-taiken','岡山県','e','備前焼体験'],
 ['ok-saidaiji-hadaka-matsuri','岡山県','e','西大寺はだか祭り'],
+['ok-barazushi','岡山県','f','岡山ばら寿司'],
+['ok-demikatsudon','岡山県','f','デミカツ丼'],
 // ===== 広島県 =====
 ['hs-miyajima','広島県','v','宮島（厳島神社）'],
 ['hs-shukkeien','広島県','s','縮景園'],
@@ -885,6 +971,8 @@ const SPOTS=[
 ['hs-onomichi-ramen','広島県','f','尾道ラーメン'],
 ['hs-shimanami-cycling','広島県','e','しまなみ海道サイクリング'],
 ['hs-flower-festival','広島県','e','フラワーフェスティバル'],
+['hs-anago-meshi','広島県','f','あなご飯'],
+['hs-shirunashi-tantanmen','広島県','f','汁なし担々麺'],
 // ===== 山口県 =====
 ['ymg-karato-ichiba','山口県','s','唐戸市場'],
 ['ymg-kaikyokan','山口県','s','海響館'],
@@ -906,6 +994,8 @@ const SPOTS=[
 ['ymg-ube-ramen','山口県','f','宇部ラーメン'],
 ['ymg-kanmon-hanabi','山口県','e','関門海峡花火大会'],
 ['ymg-hagiyaki-taiken','山口県','e','萩焼体験'],
+['ymg-iwakuni-zushi','山口県','f','岩国寿司'],
+['ymg-uiro','山口県','f','ういろう'],
 // ===== 徳島県 =====
 ['tks-awa','徳島県','e','阿波おどり'],
 ['tks-otsuka-bijutsukan','徳島県','s','大塚国際美術館'],
@@ -927,6 +1017,9 @@ const SPOTS=[
 ['tks-sudachi','徳島県','f','すだち'],
 ['tks-aizome-taiken','徳島県','e','藍染め体験'],
 ['tks-awa-ningyo-joruri','徳島県','e','阿波人形浄瑠璃'],
+['tks-yoshino-rafting','徳島県','e','吉野川ラフティング（大歩危）'],
+['tks-naruto-kintoki','徳島県','f','鳴門金時'],
+['tks-handa-somen','徳島県','f','半田そうめん'],
 // ===== 香川県 =====
 ['kg-kankakei','香川県','v','寒霞渓'],
 ['kg-sanuki','香川県','f','讃岐うどん'],
@@ -948,6 +1041,8 @@ const SPOTS=[
 ['kg-shodoshima-somen','香川県','f','小豆島そうめん'],
 ['kg-setouchi-triennale','香川県','e','瀬戸内国際芸術祭'],
 ['kg-sanuki-takamatsu-matsuri','香川県','e','さぬき高松まつり'],
+['kg-wasanbon','香川県','f','和三盆'],
+['kg-shoyu-mame','香川県','f','しょうゆ豆'],
 // ===== 愛媛県 =====
 ['ehm-dogo','愛媛県','o','道後温泉'],
 ['ehm-towel-bijutsukan','愛媛県','s','タオル美術館'],
@@ -969,6 +1064,8 @@ const SPOTS=[
 ['ehm-mikan','愛媛県','f','みかん'],
 ['ehm-niihama-taiko-matsuri','愛媛県','e','新居浜太鼓祭り'],
 ['ehm-botchan-ressha','愛媛県','e','坊っちゃん列車'],
+['ehm-goshiki-somen','愛媛県','f','五色そうめん'],
+['ehm-botchan-dango','愛媛県','f','坊っちゃん団子'],
 // ===== 高知県 =====
 ['ks-harimaya','高知県','s','はりまや橋'],
 ['ks-makino-shokubutsuen','高知県','s','牧野植物園'],
@@ -990,6 +1087,10 @@ const SPOTS=[
 ['ks-nabeyaki-ramen','高知県','f','鍋焼きラーメン'],
 ['ks-yosakoi-matsuri','高知県','e','よさこい祭り'],
 ['ks-whale-watching','高知県','e','ホエールウォッチング'],
+['ks-shimanto-canoe','高知県','e','四万十川カヌー'],
+['ks-niyodo-canoe','高知県','e','仁淀川カヌー'],
+['ks-tosa-buntan','高知県','f','土佐文旦'],
+['ks-imo-kenpi','高知県','f','芋けんぴ'],
 // ===== 福岡県 =====
 ['fk-dazaifu','福岡県','h','太宰府天満宮'],
 ['fk-fukuokajo','福岡県','h','福岡城跡'],
@@ -1013,6 +1114,8 @@ const SPOTS=[
 ['fk-kokura-jo','福岡県','h','小倉城'],
 ['fk-miyajidake','福岡県','s','宮地嶽神社'],
 ['fk-futamigaura','福岡県','v','糸島・桜井二見ヶ浦'],
+['fk-kurume-ramen','福岡県','f','久留米ラーメン'],
+['fk-hakata-udon','福岡県','f','博多うどん'],
 // ===== 佐賀県 =====
 ['sg-yutoku','佐賀県','h','祐徳稲荷神社'],
 ['sg-ureshino','佐賀県','o','嬉野温泉'],
@@ -1034,6 +1137,8 @@ const SPOTS=[
 ['sg-takezaki-kani','佐賀県','f','竹崎カニ'],
 ['sg-karatsu-kunchi','佐賀県','e','唐津くんち'],
 ['sg-saga-balloon','佐賀県','e','佐賀バルーンフェスタ'],
+['sg-shishirian-rice','佐賀県','f','シシリアンライス'],
+['sg-yudofu','佐賀県','f','嬉野温泉湯豆腐'],
 // ===== 長崎県 =====
 ['ng-inasa','長崎県','v','稲佐山（夜景）'],
 ['ng-goto-udon','長崎県','f','五島うどん'],
@@ -1055,6 +1160,8 @@ const SPOTS=[
 ['ng-kasutera','長崎県','f','カステラ'],
 ['ng-nagasaki-kunchi','長崎県','e','長崎くんち'],
 ['ng-lantern-festival','長崎県','e','長崎ランタンフェスティバル'],
+['ng-sasebo-burger','長崎県','f','佐世保バーガー'],
+['ng-toruko-rice','長崎県','f','トルコライス'],
 // ===== 熊本県 =====
 ['km-castle','熊本県','h','熊本城'],
 ['km-kuma','熊本県','v','球磨川'],
@@ -1076,6 +1183,9 @@ const SPOTS=[
 ['km-kumamoto-ramen','熊本県','f','熊本ラーメン'],
 ['km-karashi-renkon','熊本県','f','辛子蓮根'],
 ['km-yamaga-toro','熊本県','e','山鹿灯籠まつり'],
+['km-kuma-rafting','熊本県','e','球磨川ラフティング'],
+['km-taipien','熊本県','f','太平燕'],
+['km-ikinari-dango','熊本県','f','いきなり団子'],
 // ===== 大分県 =====
 ['oi-beppu-jigoku','大分県','s','別府地獄めぐり'],
 ['oi-takasakiyama','大分県','s','高崎山自然動物園'],
@@ -1097,6 +1207,8 @@ const SPOTS=[
 ['oi-hita-yakisoba','大分県','f','日田焼きそば'],
 ['oi-hita-gion','大分県','e','日田祇園祭'],
 ['oi-usuki-gion','大分県','e','臼杵祇園祭'],
+['oi-dangojiru','大分県','f','だんご汁'],
+['oi-nakatsu-karaage','大分県','f','中津からあげ'],
 // ===== 宮崎県 =====
 ['mz-aoshima','宮崎県','s','青島'],
 ['mz-sun-messe','宮崎県','s','サンメッセ日南'],
@@ -1118,6 +1230,9 @@ const SPOTS=[
 ['mz-kanjuku-mango','宮崎県','f','完熟マンゴー'],
 ['mz-takachiho-kagura','宮崎県','e','高千穂の夜神楽'],
 ['mz-jinmu-sama','宮崎県','e','宮崎神宮大祭'],
+['mz-gokase-canoe','宮崎県','e','五ヶ瀬川カヌー'],
+['mz-karamen','宮崎県','f','辛麺'],
+['mz-hiyajiru','宮崎県','f','冷や汁'],
 // ===== 鹿児島県 =====
 ['kgs-senganen','鹿児島県','s','仙巌園'],
 ['kgs-tanegashima-uchu-center','鹿児島県','s','種子島宇宙センター'],
@@ -1139,6 +1254,9 @@ const SPOTS=[
 ['kgs-shirokuma','鹿児島県','f','しろくま'],
 ['kgs-ohara-matsuri','鹿児島県','e','おはら祭'],
 ['kgs-myoenji-mairi','鹿児島県','e','妙円寺詣り'],
+['kgs-yakushima-kayak','鹿児島県','e','屋久島・安房川カヤック'],
+['kgs-keihan','鹿児島県','f','鶏飯'],
+['kgs-kagoshima-ramen','鹿児島県','f','鹿児島ラーメン'],
 // ===== 沖縄県 =====
 ['okn-shureimon','沖縄県','s','守礼門'],
 ['okn-churaumi','沖縄県','s','美ら海水族館'],
@@ -1159,7 +1277,11 @@ const SPOTS=[
 ['okn-okinawa-soba','沖縄県','f','沖縄そば'],
 ['okn-goya-champuru','沖縄県','f','ゴーヤーチャンプルー'],
 ['okn-naha-tsunahiki','沖縄県','e','那覇大綱挽'],
-['okn-eisa-matsuri','沖縄県','e','全島エイサーまつり']
+['okn-eisa-matsuri','沖縄県','e','全島エイサーまつり'],
+['okn-urauchi-kayak','沖縄県','e','西表島・浦内川カヤック'],
+['okn-gesashi-kayak','沖縄県','e','慶佐次川マングローブカヤック'],
+['okn-taco-rice','沖縄県','f','タコライス'],
+['okn-rafute','沖縄県','f','ラフテー']
 ];
 
 // 日本三大○○。items: [スポットID, 諸説なら1]
