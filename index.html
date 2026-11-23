@@ -1663,8 +1663,9 @@ function cloudSync(){
   cloudRead(d=>{
     if(!d||!d.ok){setCst('⚠ クラウドに接続できませんでした');return}
     if(!META.synced){
-      // この端末・表示方法では初めての同期：クラウド側に記録があれば、端末側の状態で上書きせず必ず読み込む
-      if(d.ts>0){
+      // この端末・表示方法では初めての同期：記録の件数が多い方を正とし、少ない側では上書きしない
+      const sN=Object.keys(d.rec||{}).length,lN=Object.keys(S.rec).length;
+      if(d.ts>0&&sN>=lN){
         S={rec:d.rec||{},set:Object.assign({incl:false,tab:'pref'},d.set||{})};
         lastRecStr=stateStr();META.ts=d.ts;META.synced=true;
         try{localStorage.setItem(KEY,JSON.stringify(S));localStorage.setItem(METAKEY,JSON.stringify(META))}catch(e){}
