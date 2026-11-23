@@ -85,6 +85,9 @@ dialog::backdrop{background:rgba(0,0,0,.4)}
 dialog h3{margin:0 0 6px}
 dialog p{font-size:13px;color:var(--sub);margin:4px 0 12px}
 .btn{display:block;width:100%;padding:12px;margin:8px 0;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--tx);font-size:15px}
+dialog input[type=url],dialog input[type=password]{display:block;width:100%;padding:11px;margin:8px 0;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--tx);font-size:14px}
+dialog hr{border:none;border-top:1px solid var(--line);margin:16px 0}
+.cst{font-size:12px;color:var(--sub);min-height:1em}
 .btn.pri{background:var(--ac);border-color:var(--ac);color:#fff}
 .btn.danger{color:var(--ac)}
 </style>
@@ -111,10 +114,17 @@ dialog p{font-size:13px;color:var(--sub);margin:4px 0 12px}
 
 <dialog id="dlg">
   <h3>データ管理</h3>
-  <p>記録はこの端末のブラウザ内に保存されます。キャッシュ削除や機種変更に備えて、ときどき書き出してください。</p>
+  <p>記録はこの端末のブラウザ内に保存されます。下のクラウド同期を設定すると、ご自身のGoogleドライブにも自動で保存されます。</p>
   <button class="btn pri" id="exp">📤 書き出す（JSON）</button>
   <button class="btn" id="imp">📥 読み込む</button>
   <input type="file" id="file" accept="application/json,.json" hidden>
+  <hr>
+  <h3>☁ クラウド同期</h3>
+  <p>GASのURLと合言葉を設定すると、開いたときに自動で読み込み、変更すると自動で保存します。</p>
+  <input type="url" id="curl" placeholder="GASのURL（https://script.google.com/…）" autocomplete="off">
+  <input type="password" id="ckey" placeholder="合言葉" autocomplete="off">
+  <button class="btn" id="csave">同期を設定する</button>
+  <p id="cst" class="cst"></p>
   <button class="btn danger" id="rst">🗑 すべての記録を消す</button>
   <button class="btn" id="cls">閉じる</button>
 </dialog>
@@ -328,7 +338,12 @@ const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'
 const KEY='tabiroku.v1';
 let S={rec:{},set:{incl:false,tab:'pref'}};
 try{const r=JSON.parse(localStorage.getItem(KEY)||'null');if(r&&r.rec)S={rec:r.rec,set:Object.assign({incl:false,tab:'pref'},r.set||{})}}catch(e){}
-function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){$('#warn').hidden=false}}
+const METAKEY='tabiroku.meta';
+let META={ts:0};try{Object.assign(META,JSON.parse(localStorage.getItem(METAKEY)||'{}'))}catch(e){}
+let lastRecStr=JSON.stringify(S.rec);
+function stamp(){META.ts=Date.now();try{localStorage.setItem(METAKEY,JSON.stringify(META))}catch(e){}}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){$('#warn').hidden=false}
+  const rs=JSON.stringify(S.rec);if(rs!==lastRecStr){lastRecStr=rs;stamp();cloudPush()}}
 const V={q:'',unv:false,g:''};
 const OPEN=new Set();
 SANDAI.forEach(c=>OPEN.add('c:'+c.id)); // 三大○○は最初から開いた状態
@@ -513,7 +528,55 @@ $('#rst').onclick=()=>{
   }
 };
 
+// ---------- クラウド同期 ----------
+const CKEY='tabiroku.cloud';
+let CLOUD={url:'',key:''};try{Object.assign(CLOUD,JSON.parse(localStorage.getItem(CKEY)||'{}'))}catch(e){}
+let cPushTimer=null;
+function cloudOn(){return !!(CLOUD.url&&CLOUD.key)}
+function setCst(t){const el=$('#cst');if(el)el.textContent=t}
+function cloudRead(cb){
+  const name='tkcb'+Date.now();const sc=document.createElement('script');
+  const to=setTimeout(()=>{cleanup();cb(null)},9000);
+  function cleanup(){try{delete window[name]}catch(e){}sc.remove()}
+  window[name]=d=>{clearTimeout(to);cleanup();cb(d)};
+  sc.onerror=()=>{clearTimeout(to);cleanup();cb(null)};
+  sc.src=CLOUD.url+(CLOUD.url.includes('?')?'&':'?')+'key='+encodeURIComponent(CLOUD.key)+'&callback='+name;
+  document.body.appendChild(sc);
+}
+function cloudPush(){
+  if(!cloudOn())return;
+  clearTimeout(cPushTimer);
+  cPushTimer=setTimeout(()=>{
+    setCst('☁ 同期中…');
+    fetch(CLOUD.url,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain'},body:JSON.stringify({key:CLOUD.key,ts:META.ts,rec:S.rec,set:S.set})})
+      .then(()=>setCst('☁ 同期しました（'+new Date().toLocaleTimeString('ja-JP',{hour:'2-digit',minute:'2-digit'})+'）'))
+      .catch(()=>setCst('⚠ 同期に失敗しました。次に開いたとき再試行します'));
+  },1200);
+}
+function cloudSync(){
+  if(!cloudOn())return;
+  setCst('☁ 読み込み中…');
+  cloudRead(d=>{
+    if(!d||!d.ok){setCst('⚠ クラウドに接続できませんでした');return}
+    if(d.ts>META.ts){
+      S={rec:d.rec||{},set:Object.assign({incl:false,tab:'pref'},d.set||{})};
+      lastRecStr=JSON.stringify(S.rec);META.ts=d.ts;
+      try{localStorage.setItem(KEY,JSON.stringify(S));localStorage.setItem(METAKEY,JSON.stringify(META))}catch(e){}
+      refreshAll();setCst('☁ クラウドから読み込みました');
+    }else if(META.ts>d.ts){cloudPush()}
+    else setCst('☁ 同期済みです');
+  });
+}
+$('#menuBtn').addEventListener('click',()=>{$('#curl').value=CLOUD.url;$('#ckey').value=CLOUD.key;if(cloudOn())setCst('☁ 同期は有効です')});
+$('#csave').onclick=()=>{
+  CLOUD.url=$('#curl').value.trim();CLOUD.key=$('#ckey').value.trim();
+  try{localStorage.setItem(CKEY,JSON.stringify(CLOUD))}catch(e){}
+  if(cloudOn()){setCst('☁ 設定しました。同期します…');cloudSync()}
+  else setCst('同期をオフにしました');
+};
+
 setTab(['pref','sandai','prog'].includes(S.set.tab)?S.set.tab:'pref');
+cloudSync();
 </script>
 </body>
 </html>
