@@ -1662,6 +1662,19 @@ function cloudSync(){
   setCst('☁ 読み込み中…');
   cloudRead(d=>{
     if(!d||!d.ok){setCst('⚠ クラウドに接続できませんでした');return}
+    if(!META.synced){
+      // この端末・表示方法では初めての同期：クラウド側に記録があれば、端末側の状態で上書きせず必ず読み込む
+      if(d.ts>0){
+        S={rec:d.rec||{},set:Object.assign({incl:false,tab:'pref'},d.set||{})};
+        lastRecStr=stateStr();META.ts=d.ts;META.synced=true;
+        try{localStorage.setItem(KEY,JSON.stringify(S));localStorage.setItem(METAKEY,JSON.stringify(META))}catch(e){}
+        mergeCustom();renderList();setCst('☁ クラウドから読み込みました');
+      }else{
+        META.synced=true;try{localStorage.setItem(METAKEY,JSON.stringify(META))}catch(e){}
+        cloudPush();
+      }
+      return;
+    }
     if(d.ts>META.ts){
       S={rec:d.rec||{},set:Object.assign({incl:false,tab:'pref'},d.set||{})};
       lastRecStr=stateStr();META.ts=d.ts;
