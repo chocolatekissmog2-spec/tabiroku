@@ -1,0 +1,12 @@
+{
+  "name": "旅ログ｜日本めぐりチェック",
+  "short_name": "旅ログ",
+  "start_url": ".",
+  "scope": ".",
+  "display": "standalone",
+  "background_color": "#faf7f2",
+  "theme_color": "#c8453b",
+  "icons": [
+    {"src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any"}
+  ]
+}
