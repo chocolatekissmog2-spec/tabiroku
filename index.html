@@ -1356,12 +1356,11 @@ function rowHTML(sp,ctx,dis){
   }
   if(SENSEN[sp.id])tags+=`<span class="tag pl">♨ ${esc(SENSEN[sp.id])}</span>`;
   const q=encodeURIComponent(sp.name.replace(/（.*?）/g,'')+' '+sp.pref);
-  const srch=sp.g==='f'||sp.g==='e';
-  const link=srch?`https://www.google.com/search?q=${q}`:`https://www.google.com/maps/search/?api=1&query=${q}`;
   const open=OPEN.has('m:'+sp.id);
   return `<div class="row${dis?' dis':''}" data-id="${sp.id}">
 <div class="main" data-act="chk"><span class="chk"></span><div class="tx"><div class="nm">${esc(sp.name)}${ctx!=='pref'?`<span class="pf">（${esc(sp.pref)}）</span>`:''}</div><div class="tags">${tags}</div><div class="sub" hidden></div></div></div>
-<a class="ic" href="${link}" target="_blank" rel="noopener" aria-label="${srch?'検索':'地図'}">${srch?'🔍':'📍'}</a>
+<a class="ic" href="https://www.google.com/maps/search/?api=1&query=${q}" target="_blank" rel="noopener" aria-label="地図">📍</a>
+<a class="ic" href="https://www.google.com/search?q=${q}" target="_blank" rel="noopener" aria-label="検索">🔍</a>
 <button class="ic star" data-act="star" aria-label="行きたい">☆</button>
 <button class="ic" data-act="memo" aria-label="メモ">✎</button>
 <div class="memo"${open?'':' hidden'}>
