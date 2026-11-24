@@ -109,6 +109,8 @@ dialog hr{border:none;border-top:1px solid var(--line);margin:16px 0}
 .vchip button{border:0;background:none;color:inherit;font-size:13px;padding:0 4px;cursor:pointer}
 .kbtn{border:1px solid var(--line);background:var(--card);color:var(--sub);border-radius:999px;padding:5px 12px;font-size:13px;cursor:pointer}
 .kbtn.on{background:var(--ac);border-color:var(--ac);color:#fff}
+.crafts{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.crafts .clab{font-size:12px;color:var(--sub)}
 .vadd{border:1px solid var(--line);background:var(--card);color:var(--tx);border-radius:8px;padding:6px 12px;font-size:13px;cursor:pointer;margin-left:6px}
 .sensel{border:1px solid var(--line);background:var(--card);color:var(--tx);border-radius:999px;padding:5px 10px;font-size:13px}
 .tmap{position:relative;width:100%;aspect-ratio:1/1;max-width:520px;margin:0 auto}
@@ -1393,12 +1395,14 @@ let lastRecStr=stateStr();
 function stamp(){META.ts=Date.now();try{localStorage.setItem(METAKEY,JSON.stringify(META))}catch(e){}}
 function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){$('#warn').hidden=false}
   const rs=stateStr();if(rs!==lastRecStr){lastRecStr=rs;stamp();cloudPush()}}
-const V={q:'',unv:false,g:'',want:false,sen:'',seas:false,near:null,kayak:false,did:false};
+const V={q:'',unv:false,g:'',want:false,sen:'',seas:false,near:null,kayak:false,rode:false};
 const OPEN=new Set();
 SANDAI.forEach(c=>OPEN.add('c:'+c.id)); // 三大○○は最初から開いた状態
 const isOn=id=>!!(S.rec[id]&&S.rec[id].c);
 function visitsOf(id){const r=S.rec[id];if(!r)return[];if(Array.isArray(r.v)&&r.v.length)return r.v;return r.d?[r.d]:[]}
-function clean(id){const r=S.rec[id];if(r&&!r.c&&!r.m&&!r.w&&!r.k&&!visitsOf(id).length)delete S.rec[id]}
+function clean(id){const r=S.rec[id];if(r&&!r.c&&!r.m&&!r.w&&!(r.craft&&Object.keys(r.craft).length)&&!visitsOf(id).length)delete S.rec[id]}
+const CRAFT={canoe:'🛶 カヌー',kayak:'🛶 カヤック',boat:'🚣 ボート'};
+function craftsOf(id){const r=S.rec[id];return r&&r.craft?Object.keys(CRAFT).filter(c=>r.craft[c]):[]}
 function setVisits(id,arr){const r=S.rec[id]||(S.rec[id]={});r.v=arr.slice().sort();if(r.v.length)r.d=r.v[r.v.length-1];else delete r.d;clean(id);save();refreshAll()}
 function toggle(id){const r=S.rec[id]||(S.rec[id]={});r.c=!r.c;clean(id);save();refreshAll();if(navigator.vibrate)navigator.vibrate(8)}
 
@@ -1415,7 +1419,7 @@ function matches(sp){
   if(V.g&&sp.g!==V.g)return false;
   if(V.sen&&SENSEN[sp.id]!==V.sen)return false;
   if(V.kayak&&!sp.k)return false;
-  if(V.did&&!(S.rec[sp.id]||{}).k)return false;
+  if(V.rode&&!craftsOf(sp.id).length)return false;
   if(V.seas&&!seasonMatch(sp))return false;
   if(V.near&&!V.near.includes(sp.pref))return false;
   if(V.q){const q=V.q.toLowerCase();const rec=S.rec[sp.id];const hay=(sp.name+sp.pref+sp.sandai.map(t=>t.title).join('')+((rec&&rec.m)||'')).toLowerCase();if(!hay.includes(q))return false}
@@ -1440,7 +1444,7 @@ function rowHTML(sp,ctx,dis){
 <button class="ic star" data-act="star" aria-label="行きたい">☆</button>
 <button class="ic" data-act="memo" aria-label="メモ">✎</button>
 <div class="memo"${open?'':' hidden'}>
-<div><button type="button" class="kbtn" data-act="kdid">🛶 カヤック・カヌーをした</button></div>
+<div class="crafts"><span class="clab">乗ったもの</span><button type="button" class="kbtn" data-act="craft" data-c="canoe">🛶 カヌー</button><button type="button" class="kbtn" data-act="craft" data-c="kayak">🛶 カヤック</button><button type="button" class="kbtn" data-act="craft" data-c="boat">🚣 ボート</button></div>
 <div class="visits"></div>
 <label>訪問日 <input type="date" class="vdate"><button type="button" class="vadd" data-act="vadd">追加</button></label>
 <textarea data-f="m" rows="2" placeholder="メモ（感想・おすすめ・次回やりたいこと）"></textarea>
@@ -1450,7 +1454,7 @@ function cardHead(name,key,attr){
   return `<section class="card${OPEN.has(key)?' open':''}" data-key="${key}" ${attr}><button class="hd" data-act="tog"><span class="pn">${esc(name)}</span><span class="cnt"></span><span class="bar"><i></i></span><span class="car">▾</span></button><div class="bd">`;
 }
 function renderPref(){
-  const filtering=V.q||V.unv||V.g||V.want||V.sen||V.seas||V.near||V.kayak;let h='';
+  const filtering=V.q||V.unv||V.g||V.want||V.sen||V.seas||V.near||V.kayak||V.rode;let h='';
   for(const [rg,list] of REGIONS){
     let inner='';
     for(const p of list){
@@ -1509,6 +1513,15 @@ function renderGenre(){
     h+=kVis.map(s=>rowHTML(s,'genre')).join('');
     h+='</div></section>';
   }
+  const rAll=Object.values(SP).filter(s=>craftsOf(s.id).length);
+  const rVis=rAll.filter(matches);
+  if(rVis.length){
+    const order={};REGIONS.flatMap(r=>r[1]).forEach((p,i)=>order[p]=i);
+    rVis.sort((a,b)=>order[a.pref]-order[b.pref]);
+    h+=cardHead('🚣 乗った場所（カヌー・カヤック・ボート）','g:rode',`data-rode="1"`);
+    h+=rVis.map(s=>rowHTML(s,'genre')).join('');
+    h+='</div></section>';
+  }
   $('#app').innerHTML=h||'<p class="empty">該当するスポットがありません</p>';
 }
 function renderKiroku(){
@@ -1562,7 +1575,7 @@ function renderBar(){
   if(t==='pref'){
     h+=Object.keys(GENRES).map(k=>`<button class="chip${V.g===k?' on':''}" data-g="${k}">${GENRES[k].i}${GENRES[k].n}</button>`).join('');
     h+=`<button class="chip${V.kayak?' on':''}" data-f="kayak">🛶 カヤック・カヌー</button>`;
-    h+=`<button class="chip${V.did?' on':''}" data-f="did">🛶 漕いだのみ</button>`;
+    h+=`<button class="chip${V.rode?' on':''}" data-f="rode">🚣 乗った場所</button>`;
     h+=`<button class="chip${V.seas?' on':''}" data-f="seas">🌸 季節のおすすめ</button>`;
     h+=`<button class="chip${V.near?' on':''}" data-f="near">📍 近くの県</button>`;
     h+=`<select id="sen" class="sensel"><option value="">♨ 泉質すべて</option>${[...new Set(Object.values(SENSEN))].sort().map(q=>`<option value="${esc(q)}"${V.sen===q?' selected':''}>${esc(q)}</option>`).join('')}</select>`;
@@ -1585,12 +1598,11 @@ function refreshAll(){
     const rec=S.rec[r.dataset.id]||{};
     r.classList.toggle('on',!!rec.c);
     const vs=visitsOf(r.dataset.id);
-    const sub=[];if(vs.length)sub.push('📅 '+vs[vs.length-1].replace(/-/g,'/')+(vs.length>1?`（全${vs.length}回）`:''));if(rec.k)sub.push('🛶 カヤック・カヌーした');if(rec.m)sub.push('📝 '+rec.m.split('\n')[0]);
+    const sub=[];if(vs.length)sub.push('📅 '+vs[vs.length-1].replace(/-/g,'/')+(vs.length>1?`（全${vs.length}回）`:''));const cs=craftsOf(r.dataset.id);if(cs.length)sub.push(cs.map(c=>CRAFT[c]).join(' '));if(rec.m)sub.push('📝 '+rec.m.split('\n')[0]);
     const el=r.querySelector('.sub');el.textContent=sub.join('　');el.hidden=!sub.length;
     const star=r.querySelector('.star');
     if(star){star.textContent=rec.w?'★':'☆';star.classList.toggle('won',!!rec.w)}
-    const kb=r.querySelector('.kbtn');
-    if(kb)kb.classList.toggle('on',!!rec.k);
+    r.querySelectorAll('.kbtn').forEach(b=>b.classList.toggle('on',!!(rec.craft&&rec.craft[b.dataset.c])));
     const ve=r.querySelector('.visits');
     if(ve){const vh=vs.map((d,i)=>`<span class="vchip">📅 ${d.replace(/-/g,'/')}<button data-act="vdel" data-i="${i}" aria-label="この日を削除">✕</button></span>`).join('');if(ve._h!==vh){ve.innerHTML=vh;ve._h=vh}}
     const mi=r.querySelector('[data-f=m]');
@@ -1598,6 +1610,7 @@ function refreshAll(){
   });
   document.querySelectorAll('[data-pref]').forEach(c=>{const all=BYPREF[c.dataset.pref]||[];setCnt(c,all.filter(s=>isOn(s.id)).length,all.length)});
   document.querySelectorAll('[data-genre]').forEach(c=>{const all=c.dataset.genre==='kayak'?Object.values(SP).filter(s=>s.k):Object.values(SP).filter(s=>s.g===c.dataset.genre);setCnt(c,all.filter(s=>isOn(s.id)).length,all.length)});
+  document.querySelectorAll('[data-rode]').forEach(c=>{const all=Object.values(SP).filter(s=>craftsOf(s.id).length);setCnt(c,all.filter(s=>isOn(s.id)).length,all.length)});
   document.querySelectorAll('[data-cat]').forEach(c=>{const s=catStat(CAT[c.dataset.cat]);setCnt(c,s.n,s.t)});
   const ALLS=Object.values(SP);const n=ALLS.filter(s=>isOn(s.id)).length;
   $('#tn').textContent=n;$('#tt').textContent=ALLS.length;$('#gb').style.width=(ALLS.length?n/ALLS.length*100:0)+'%';
@@ -1618,7 +1631,7 @@ $('#app').addEventListener('click',e=>{
   const act=a.dataset.act;
   if(act==='chk')toggle(a.closest('.row').dataset.id);
   else if(act==='star'){const id=a.closest('.row').dataset.id;const r=S.rec[id]||(S.rec[id]={});r.w=!r.w;clean(id);save();refreshAll()}
-  else if(act==='kdid'){const id=a.closest('.row').dataset.id;const r=S.rec[id]||(S.rec[id]={});r.k=!r.k;clean(id);save();refreshAll()}
+  else if(act==='craft'){const id=a.closest('.row').dataset.id;const r=S.rec[id]||(S.rec[id]={});r.craft=r.craft||{};const c=a.dataset.c;if(r.craft[c])delete r.craft[c];else r.craft[c]=true;if(!Object.keys(r.craft).length)delete r.craft;clean(id);save();refreshAll()}
   else if(act==='vadd'){
     const row=a.closest('.row'),inp=row.querySelector('.vdate');
     if(!inp.value){alert('日付を選んでください');return}
@@ -1648,7 +1661,7 @@ $('#bar').addEventListener('click',e=>{
   else if(c.dataset.f==='want'){V.want=!V.want}
   else if(c.dataset.f==='seas'){V.seas=!V.seas}
   else if(c.dataset.f==='kayak'){V.kayak=!V.kayak}
-  else if(c.dataset.f==='did'){V.did=!V.did}
+  else if(c.dataset.f==='rode'){V.rode=!V.rode}
   else if(c.dataset.f==='incl'){S.set.incl=!S.set.incl;save()}
   else if(c.dataset.f==='near'){
     if(V.near){V.near=null;renderBar();renderList();return}
