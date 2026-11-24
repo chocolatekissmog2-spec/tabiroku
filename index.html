@@ -1552,9 +1552,10 @@ function renderProg(){
   for(const id in S.rec){const sp=SP[id];if(!sp)continue;const vs=visitsOf(id);tVisits+=vs.length;vs.forEach(d=>{allDates.push(d);if(d.startsWith(yr)){yVisits++;yPrefs.add(sp.pref)}})}
   allDates.sort();
   const donePrefs=REGIONS.flatMap(r=>r[1]).filter(p=>{const l=BYPREF[p]||[];return l.length&&l.every(s=>isOn(s.id))}).length;
+  const visitedPrefs=new Set(ALLS.filter(s=>isOn(s.id)).map(s=>s.pref)).size;
   h+='<div class="p-sec"><h3>📊 まとめ</h3>'
-    +`<div class="sum-h">今年（${yr}年）</div>`+sline('訪問回数',yVisits+' 回')+sline('訪れた都道府県',yPrefs.size+' 都道府県')
-    +'<div class="sum-h">今までの通算</div>'+sline('チェック済み',n+' / '+tot+' 件')+sline('訪問回数',tVisits+' 回')+sline('制覇した都道府県',donePrefs+' / 47')
+    +`<div class="sum-h">今年（${yr}年）</div>`+sline('訪問回数',yVisits+' 回')+sline('訪れた都道府県（日付あり）',yPrefs.size+' 都道府県')
+    +'<div class="sum-h">今までの通算</div>'+sline('チェック済み',n+' / '+tot+' 件')+sline('訪れた都道府県',visitedPrefs+' / 47 都道府県')+sline('訪問回数',tVisits+' 回')+sline('制覇した都道府県',donePrefs+' / 47')
     +(allDates.length?sline('訪問日の範囲',allDates[0].replace(/-/g,'/')+' 〜 '+allDates[allDates.length-1].replace(/-/g,'/')):'')
     +'</div>';
   h+='<div class="p-sec"><h3>🗾 日本地図（達成率）</h3><div class="tmap">'+REGIONS.flatMap(r=>r[1]).map(p=>{const l=BYPREF[p]||[];const nn=l.filter(s=>isOn(s.id)).length;const pc=l.length?Math.round(nn/l.length*100):0;const t=TILE[p];return `<button class="tile" data-jumppref="${p}" style="left:${(t[0]/12*100).toFixed(2)}%;top:${(t[1]/12*100).toFixed(2)}%;background:color-mix(in srgb,var(--ok) ${pc}%,var(--card))"><span class="tn2">${esc(p.replace(/県|府/g,''))}</span><span class="tp">${pc}%</span></button>`}).join('')+'</div><p class="note" style="margin:8px 0 0">タップすると、その都道府県の一覧を開きます。</p></div>';
@@ -1805,7 +1806,7 @@ setTab(['pref','genre','sandai','kiroku','prog'].includes(S.set.tab)?S.set.tab:'
 cloudSync();
 
 // ---------- 版チェック（新しい版が出たら自動で読み直す） ----------
-const APPVER='20261124-craft1';
+const APPVER='20261124-pref1';
 (async()=>{try{const t=await(await fetch('version.txt',{cache:'no-store'})).text();const v=t.trim();if(v&&v!==APPVER&&sessionStorage.getItem('tabiroku.vc')!==v){sessionStorage.setItem('tabiroku.vc',v);location.reload()}}catch(e){}})();
 </script>
 </body>
