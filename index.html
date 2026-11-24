@@ -1803,6 +1803,10 @@ $('#csave').onclick=()=>{
 
 setTab(['pref','genre','sandai','kiroku','prog'].includes(S.set.tab)?S.set.tab:'pref');
 cloudSync();
+
+// ---------- 版チェック（新しい版が出たら自動で読み直す） ----------
+const APPVER='20261124-craft1';
+(async()=>{try{const t=await(await fetch('version.txt',{cache:'no-store'})).text();const v=t.trim();if(v&&v!==APPVER&&sessionStorage.getItem('tabiroku.vc')!==v){sessionStorage.setItem('tabiroku.vc',v);location.reload()}}catch(e){}})();
 </script>
 </body>
 </html>
