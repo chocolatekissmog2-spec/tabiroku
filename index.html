@@ -38,6 +38,8 @@ main{max-width:720px;margin:0 auto;padding:0 12px 80px}
 .bar-f input[type=search]{flex:1 1 100%;padding:9px 12px;border:1px solid var(--line);border-radius:10px;background:var(--card);color:var(--tx);font-size:16px}
 .chip{border:1px solid var(--line);background:var(--card);color:var(--sub);border-radius:999px;padding:5px 12px;font-size:13px}
 .chip.on{background:var(--ac);border-color:var(--ac);color:#fff}
+.xbar{display:flex;gap:8px;margin:0 0 10px}
+.xbtn{border:1px solid var(--line);background:var(--card);color:var(--sub);border-radius:8px;padding:5px 12px;font-size:13px;cursor:pointer}
 h2.rg{font-size:13px;color:var(--sub);margin:18px 4px 6px;letter-spacing:.05em}
 .card{background:var(--card);border:1px solid var(--line);border-radius:14px;margin-bottom:8px;overflow:hidden}
 .card.done{border-color:var(--ok)}
@@ -141,13 +143,22 @@ dialog hr{border:none;border-top:1px solid var(--line);margin:16px 0}
   </nav>
 </header>
 <main>
-  <div id="warn" hidden>⚠ この環境ではデータを保存できません。メニューから書き出してバックアップしてください。</div>
+  <div id="warn" hidden>⚠ 保存に失敗しています。このまま閉じると記録が失われることがあります。メニュー（⚙）から書き出してバックアップしてください。</div>
   <div id="bar" class="bar-f"></div>
   <div id="app"></div>
 </main>
 
 <dialog id="dlg">
   <h3>データ管理</h3>
+  <h3>✏️ スポットを追加</h3>
+  <p>ご自身でスポットを追加できます。追加したスポットはクラウド同期で他の端末にも反映されます。</p>
+  <input type="text" id="aname" placeholder="スポット名（例：○○温泉）" autocomplete="off">
+  <select id="apref"></select>
+  <select id="agenre"></select>
+  <button class="btn" id="aadd">追加する</button>
+  <button class="btn" id="alistBtn">追加したスポット（<span id="alistN">0</span>件）</button>
+  <div id="alist" hidden></div>
+  <hr>
   <p>記録はこの端末のブラウザ内に保存されます。下のクラウド同期を設定すると、ご自身のGoogleドライブにも自動で保存されます。</p>
   <button class="btn pri" id="exp">📤 書き出す（JSON）</button>
   <button class="btn" id="imp">📥 読み込む</button>
@@ -159,14 +170,7 @@ dialog hr{border:none;border-top:1px solid var(--line);margin:16px 0}
   <input type="password" id="ckey" placeholder="合言葉" autocomplete="off">
   <button class="btn" id="csave">同期を設定する</button>
   <p id="cst" class="cst"></p>
-  <hr>
-  <h3>✏️ スポットを追加</h3>
-  <p>ご自身でスポットを追加できます。追加したスポットはクラウド同期で他の端末にも反映されます。</p>
-  <input type="text" id="aname" placeholder="スポット名（例：○○温泉）" autocomplete="off">
-  <select id="apref"></select>
-  <select id="agenre"></select>
-  <button class="btn" id="aadd">追加する</button>
-  <div id="alist"></div>
+  <p id="lsync" class="cst"></p>
   <hr>
   <button class="btn danger" id="rst">🗑 すべての記録を消す</button>
   <button class="btn" id="cls">閉じる</button>
@@ -1393,8 +1397,10 @@ let META={ts:0};try{Object.assign(META,JSON.parse(localStorage.getItem(METAKEY)|
 function stateStr(){return JSON.stringify({r:S.rec,c:(S.set&&S.set.custom)||[]})}
 let lastRecStr=stateStr();
 function stamp(){META.ts=Date.now();try{localStorage.setItem(METAKEY,JSON.stringify(META))}catch(e){}}
-function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){$('#warn').hidden=false}
+let SAVEFAIL=false;
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S));SAVEFAIL=false}catch(e){SAVEFAIL=true;$('#warn').hidden=false}
   const rs=stateStr();if(rs!==lastRecStr){lastRecStr=rs;stamp();cloudPush()}}
+window.addEventListener('beforeunload',e=>{if(SAVEFAIL){e.preventDefault();e.returnValue=''}});
 const V={q:'',unv:false,g:'',want:false,sen:'',seas:false,near:null,kayak:false,rode:false,goshu:false};
 const OPEN=new Set();
 SANDAI.forEach(c=>OPEN.add('c:'+c.id)); // 三大○○は最初から開いた状態
@@ -1453,11 +1459,12 @@ function rowHTML(sp,ctx,dis){
 <textarea data-f="m" rows="2" placeholder="メモ（感想・おすすめ・次回やりたいこと）"></textarea>
 </div></div>`;
 }
+const XBAR='<div class="xbar"><button type="button" class="xbtn" data-act="openall">全て開く</button><button type="button" class="xbtn" data-act="closeall">全て閉じる</button></div>';
 function cardHead(name,key,attr){
   return `<section class="card${OPEN.has(key)?' open':''}" data-key="${key}" ${attr}><button class="hd" data-act="tog"><span class="pn">${esc(name)}</span><span class="cnt"></span><span class="bar"><i></i></span><span class="car">▾</span></button><div class="bd">`;
 }
 function renderPref(){
-  const filtering=V.q||V.unv||V.g||V.want||V.sen||V.seas||V.near||V.kayak||V.rode||V.goshu;let h='';
+  const filtering=V.q||V.unv||V.g||V.want||V.sen||V.seas||V.near||V.kayak||V.rode||V.goshu;let h=XBAR;
   for(const [rg,list] of REGIONS){
     let inner='';
     for(const p of list){
@@ -1481,7 +1488,7 @@ function renderPref(){
   $('#app').innerHTML=h||'<p class="empty">該当するスポットがありません</p>';
 }
 function renderSandai(){
-  let h='';
+  let h=XBAR;
   for(const c of SANDAI){
     const def=c.items.filter(i=>!i[1]),dis=c.items.filter(i=>i[1]);
     const fd=def.filter(([id])=>matches(SP[id])),fs=dis.filter(([id])=>matches(SP[id]));
@@ -1496,7 +1503,7 @@ function renderSandai(){
   $('#app').innerHTML=h||'<p class="empty">該当するものがありません</p>';
 }
 function renderGenre(){
-  let h='';
+  let h=XBAR;
   for(const gk in GENRES){
     const all=Object.values(SP).filter(s=>s.g===gk);
     const vis=all.filter(matches);
@@ -1534,6 +1541,15 @@ function renderGenre(){
     h+=gVis.map(s=>rowHTML(s,'genre')).join('');
     h+='</div></section>';
   }
+  const oAll=Object.values(SP).filter(s=>s.g==='o');
+  const oVis=oAll.filter(s=>isOn(s.id)).filter(matches);
+  if(oVis.length){
+    const order={};REGIONS.flatMap(r=>r[1]).forEach((p,i)=>order[p]=i);
+    oVis.sort((a,b)=>order[a.pref]-order[b.pref]);
+    h+=cardHead('♨️ 入った温泉','g:onsen',`data-onsen="1"`);
+    h+=oVis.map(s=>rowHTML(s,'genre')).join('');
+    h+='</div></section>';
+  }
   $('#app').innerHTML=h||'<p class="empty">該当するスポットがありません</p>';
 }
 function renderKiroku(){
@@ -1547,7 +1563,7 @@ function renderKiroku(){
     const k=e.d.slice(0,7);
     if(k!==ym){ym=k;h+=`<h2 class="rg">${e.d.slice(0,4)}年${+e.d.slice(5,7)}月</h2>`}
     const wd=WD[new Date(e.d+'T00:00:00').getDay()];
-    h+=`<div class="tl-row" data-jump="${e.sp.id}"><span class="tl-d">${+e.d.slice(8)}日（${wd}）</span><span>${esc(e.sp.name)}<span class="pf">（${esc(e.sp.pref)}）</span></span></div>`;
+    h+=`<div class="tl-row" data-jump="${e.sp.id}"><span class="tl-d">${+e.d.slice(8)}日（${wd}）</span><span>${esc(e.sp.name)}${(GENRES[e.sp.g]||{}).i||''}<span class="pf">（${esc(e.sp.pref)}）</span></span></div>`;
   }
   const undated=Object.keys(S.rec).filter(id=>S.rec[id].c&&!visitsOf(id).length).length;
   if(undated)h+=`<p class="note">日付のないチェックが ${undated} 件あります</p>`;
@@ -1558,7 +1574,7 @@ function sline(l,v){return `<div class="p-line"><span class="l">${esc(l)}</span>
 function catStat(c){const items=c.items.filter(([id,d])=>S.set.incl||!d);return{n:items.filter(([id])=>isOn(id)).length,t:items.length}}
 function renderProg(){
   const ALLS=Object.values(SP);const tot=ALLS.length,n=ALLS.filter(s=>isOn(s.id)).length;
-  let h=`<div class="p-sec"><div class="big">${tot?Math.round(n/tot*100):0}%</div><div class="total">${n} / ${tot} 件チェック済み</div></div>`;
+  let h=`<div class="p-sec"><div class="big">${n} 件</div><div class="total">チェック済みスポット</div></div>`;
   const yr=String(new Date().getFullYear());
   let yVisits=0;const yPrefs=new Set();let tVisits=0;const allDates=[];
   for(const id in S.rec){const sp=SP[id];if(!sp)continue;const vs=visitsOf(id);tVisits+=vs.length;vs.forEach(d=>{allDates.push(d);if(d.startsWith(yr)){yVisits++;yPrefs.add(sp.pref)}})}
@@ -1567,10 +1583,10 @@ function renderProg(){
   const visitedPrefs=new Set(ALLS.filter(s=>isOn(s.id)).map(s=>s.pref)).size;
   h+='<div class="p-sec"><h3>📊 まとめ</h3>'
     +`<div class="sum-h">今年（${yr}年）</div>`+sline('訪問回数',yVisits+' 回')+sline('訪れた都道府県（日付あり）',yPrefs.size+' 都道府県')
-    +'<div class="sum-h">今までの通算</div>'+sline('チェック済み',n+' / '+tot+' 件')+sline('訪れた都道府県',visitedPrefs+' / 47 都道府県')+sline('訪問回数',tVisits+' 回')+sline('制覇した都道府県',donePrefs+' / 47')
+    +'<div class="sum-h">今までの通算</div>'+sline('チェック済み',n+' 件')+sline('訪れた都道府県',visitedPrefs+' / 47 都道府県')+sline('訪問回数',tVisits+' 回')+sline('制覇した都道府県',donePrefs+' / 47')
     +(allDates.length?sline('訪問日の範囲',allDates[0].replace(/-/g,'/')+' 〜 '+allDates[allDates.length-1].replace(/-/g,'/')):'')
     +'</div>';
-  h+='<div class="p-sec"><h3>🗾 日本地図（達成率）</h3><div class="tmap">'+REGIONS.flatMap(r=>r[1]).map(p=>{const l=BYPREF[p]||[];const nn=l.filter(s=>isOn(s.id)).length;const pc=l.length?Math.round(nn/l.length*100):0;const t=TILE[p];return `<button class="tile" data-jumppref="${p}" style="left:${(t[0]/12*100).toFixed(2)}%;top:${(t[1]/12*100).toFixed(2)}%;background:color-mix(in srgb,var(--ok) ${pc}%,var(--card))"><span class="tn2">${esc(p.replace(/県|府/g,''))}</span><span class="tp">${pc}%</span></button>`}).join('')+'</div><p class="note" style="margin:8px 0 0">タップすると、その都道府県の一覧を開きます。</p></div>';
+  h+='<div class="p-sec"><h3>🗾 日本地図（チェック件数）</h3><div class="tmap">'+REGIONS.flatMap(r=>r[1]).map(p=>{const l=BYPREF[p]||[];const nn=l.filter(s=>isOn(s.id)).length;const pc=l.length?Math.round(nn/l.length*100):0;const t=TILE[p];return `<button class="tile" data-jumppref="${p}" style="left:${(t[0]/12*100).toFixed(2)}%;top:${(t[1]/12*100).toFixed(2)}%;background:color-mix(in srgb,var(--ok) ${pc}%,var(--card))"><span class="tn2">${esc(p.replace(/県|府/g,''))}</span><span class="tp">${nn}</span></button>`}).join('')+'</div><p class="note" style="margin:8px 0 0">タップすると、その都道府県の一覧を開きます。</p></div>';
   const closePrefs=REGIONS.flatMap(r=>r[1]).map(p=>{const l=BYPREF[p]||[];const nn=l.filter(s=>isOn(s.id)).length;return{p,n:nn,t:l.length,rest:l.length-nn}}).filter(x=>x.t&&x.n>0&&x.rest>0&&x.rest<=5).sort((a,b)=>a.rest-b.rest);
   if(closePrefs.length)h+='<div class="p-sec"><h3>🔥 制覇まであと少し</h3>'+closePrefs.map(x=>pline(x.p+'（あと'+x.rest+'件）',x.n,x.t)).join('')+'</div>';
   const done=SANDAI.filter(c=>{const s=catStat(c);return s.n===s.t}).length;
@@ -1626,6 +1642,7 @@ function refreshAll(){
   document.querySelectorAll('[data-genre]').forEach(c=>{const all=c.dataset.genre==='kayak'?Object.values(SP).filter(s=>s.k):Object.values(SP).filter(s=>s.g===c.dataset.genre);setCnt(c,all.filter(s=>isOn(s.id)).length,all.length)});
   document.querySelectorAll('[data-rode]').forEach(c=>{const all=Object.values(SP).filter(s=>craftsOf(s.id).length);setCnt(c,all.filter(s=>isOn(s.id)).length,all.length)});
   document.querySelectorAll('[data-goshu]').forEach(c=>{const all=Object.values(SP).filter(s=>goshuinOf(s.id));setCnt(c,all.filter(s=>isOn(s.id)).length,all.length)});
+  document.querySelectorAll('[data-onsen]').forEach(c=>{const all=Object.values(SP).filter(s=>s.g==='o');setCnt(c,all.filter(s=>isOn(s.id)).length,all.length)});
   document.querySelectorAll('[data-cat]').forEach(c=>{const s=catStat(CAT[c.dataset.cat]);setCnt(c,s.n,s.t)});
   const ALLS=Object.values(SP);const n=ALLS.filter(s=>isOn(s.id)).length;
   $('#tn').textContent=n;$('#tt').textContent=ALLS.length;$('#gb').style.width=(ALLS.length?n/ALLS.length*100:0)+'%';
@@ -1659,7 +1676,9 @@ $('#app').addEventListener('click',e=>{
   else if(act==='memo'){
     const r=a.closest('.row'),m=r.querySelector('.memo'),k='m:'+r.dataset.id;
     m.hidden=!m.hidden;m.hidden?OPEN.delete(k):OPEN.add(k);
-  }else if(act==='tog'){
+  }else if(act==='openall'){document.querySelectorAll('#app .card').forEach(c=>OPEN.add(c.dataset.key));renderList()}
+  else if(act==='closeall'){document.querySelectorAll('#app .card').forEach(c=>OPEN.delete(c.dataset.key));renderList()}
+  else if(act==='tog'){
     const c=a.closest('.card');c.classList.toggle('open');
     c.classList.contains('open')?OPEN.add(c.dataset.key):OPEN.delete(c.dataset.key);
   }
@@ -1732,6 +1751,7 @@ $('#apref').innerHTML=REGIONS.flatMap(r=>r[1]).map(p=>`<option value="${p}">${p}
 $('#agenre').innerHTML=Object.keys(GENRES).map(k=>`<option value="${k}">${GENRES[k].i} ${GENRES[k].n}</option>`).join('');
 function renderCustomList(){
   const list=(S.set&&S.set.custom)||[];
+  const nEl=$('#alistN');if(nEl)nEl.textContent=list.length;
   $('#alist').innerHTML=list.length?list.map(c=>`<div class="crow"><span class="cn">${esc(c.name)}<span class="pf">（${esc(c.pref)}）</span></span><button data-del="${esc(c.id)}">削除</button></div>`).join(''):'';
 }
 $('#aadd').onclick=()=>{
@@ -1743,6 +1763,7 @@ $('#aadd').onclick=()=>{
   mergeCustom();save();$('#aname').value='';
   renderCustomList();renderList();
 };
+$('#alistBtn').onclick=()=>{const a=$('#alist');a.hidden=!a.hidden};
 $('#alist').addEventListener('click',e=>{
   const b=e.target.closest('[data-del]');if(!b)return;
   const id=b.dataset.del;const sp=SP[id];
@@ -1761,6 +1782,8 @@ if(!CLOUD.url)CLOUD.url=DEFAULT_ENDPOINT;
 let cPushTimer=null;
 function cloudOn(){return !!(CLOUD.url&&CLOUD.key)}
 function setCst(t){const el=$('#cst');if(el)el.textContent=t}
+function updLsync(){const el=$('#lsync');if(!el)return;if(META.sync){const d=new Date(META.sync);el.textContent='最終同期：'+d.toLocaleDateString('ja-JP')+' '+d.toLocaleTimeString('ja-JP',{hour:'2-digit',minute:'2-digit'})}else el.textContent=''}
+updLsync();
 function cloudRead(cb){
   const name='tkcb'+Date.now();const sc=document.createElement('script');
   const to=setTimeout(()=>{cleanup();cb(null)},9000);
@@ -1776,7 +1799,7 @@ function cloudPush(){
   cPushTimer=setTimeout(()=>{
     setCst('☁ 同期中…');
     fetch(CLOUD.url,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain'},body:JSON.stringify({key:CLOUD.key,ts:META.ts,rec:S.rec,set:S.set})})
-      .then(()=>setCst('☁ 同期しました（'+new Date().toLocaleTimeString('ja-JP',{hour:'2-digit',minute:'2-digit'})+'）'))
+      .then(()=>{META.sync=Date.now();try{localStorage.setItem(METAKEY,JSON.stringify(META))}catch(e){}updLsync();setCst('☁ 同期しました（'+new Date().toLocaleTimeString('ja-JP',{hour:'2-digit',minute:'2-digit'})+'）')})
       .catch(()=>setCst('⚠ 同期に失敗しました。次に開いたとき再試行します'));
   },1200);
 }
@@ -1822,7 +1845,7 @@ setTab(['pref','genre','sandai','kiroku','prog'].includes(S.set.tab)?S.set.tab:'
 cloudSync();
 
 // ---------- 版チェック（新しい版が出たら自動で読み直す） ----------
-const APPVER='20261128-visit1';
+const APPVER='20261128-batch1';
 (async()=>{try{const t=await(await fetch('version.txt',{cache:'no-store'})).text();const v=t.trim();if(v&&v!==APPVER&&sessionStorage.getItem('tabiroku.vc')!==v){sessionStorage.setItem('tabiroku.vc',v);location.reload()}}catch(e){}})();
 </script>
 </body>
