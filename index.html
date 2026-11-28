@@ -1405,7 +1405,7 @@ const CRAFT={canoe:'🛶 カヌー',kayak:'🛶 カヤック',boat:'🚣 ボー�
 function craftsOf(id){const r=S.rec[id];return r&&r.craft?Object.keys(CRAFT).filter(c=>r.craft[c]):[]}
 function goshuinOf(id){const r=S.rec[id];return !!(r&&r.goshuin)}
 function setVisits(id,arr){const r=S.rec[id]||(S.rec[id]={});r.v=arr.slice().sort();if(r.v.length)r.d=r.v[r.v.length-1];else delete r.d;clean(id);save();refreshAll()}
-function toggle(id){const r=S.rec[id]||(S.rec[id]={});r.c=!r.c;clean(id);save();refreshAll();if(navigator.vibrate)navigator.vibrate(8)}
+function toggle(id){const r=S.rec[id]||(S.rec[id]={});r.c=!r.c;if(r.c){const d=new Date(),p=n=>String(n).padStart(2,'0');const t=d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate());const vs=visitsOf(id);if(!vs.includes(t))setVisits(id,vs.concat(t))}clean(id);save();refreshAll();if(navigator.vibrate)navigator.vibrate(8)}
 
 // ---------- 描画 ----------
 // 泉質タグ（主な温泉のみ）・都道府県タイル地図の配置・県庁所在地のおおよその位置
@@ -1822,7 +1822,7 @@ setTab(['pref','genre','sandai','kiroku','prog'].includes(S.set.tab)?S.set.tab:'
 cloudSync();
 
 // ---------- 版チェック（新しい版が出たら自動で読み直す） ----------
-const APPVER='20261128-goshuin1';
+const APPVER='20261128-visit1';
 (async()=>{try{const t=await(await fetch('version.txt',{cache:'no-store'})).text();const v=t.trim();if(v&&v!==APPVER&&sessionStorage.getItem('tabiroku.vc')!==v){sessionStorage.setItem('tabiroku.vc',v);location.reload()}}catch(e){}})();
 </script>
 </body>
